@@ -18,6 +18,7 @@
       return rentalDuration * this.rentalPrice;
     };
 
+    //done (tested when you rent)
     this.reserve = function(customer, rentalDuration) {
       if (this.available == true) {
         this.available = false;
@@ -29,6 +30,7 @@
       }
     };
 
+    //done
     this.return = function() {
       if (this.available == true) {
         return "Sorry, this car have already been returned.";
@@ -46,30 +48,35 @@
     this.cars = [];
     this.customers = [];
 
+    //predefined
     this.findCarIndex = function (carID) {
       return this.cars.findIndex(function(car){
         return car.id === carID ? true : false ;
       });
     };
 
+    //predefined
     this.findCustomerIndex = function (customerID) {
       return this.customers.findIndex(function(customer){
         return customer.id === customerID ? true : false ;
       });
     };
 
+    //predefined
     this.getCar = function (carID) {
       return this.cars.find(function(car){
         return car.id === carID ? true : false ;
       });
     };
 
+    //predefined
     this.getCustomer = function (customerID) {
       return this.customers.find(function(customer){
         return customer.id === customerID ? true : false ;
       });
     };
 
+    //done
     this.addCar = function (carObj) {
       if (this.getCar(carObj.id)!=undefined) {
         console.log("ID already exists");
@@ -79,6 +86,7 @@
       }
     };
 
+    //done
     this.addCustomer = function (customerObj) {
       if (this.getCustomer(customerObj.id)!=undefined) {
         console.log("ID already exists");
@@ -88,6 +96,7 @@
       }
     };
 
+    //done
     this.removeCar = function (carID) {
       var carIndex = this.findCarIndex(carID);
       if (carIndex >= 0) {
@@ -98,6 +107,7 @@
       }
     };
 
+    //done
     this.removeCustormer = function (customerID) {
       var customerIndex = this.findCustomerIndex(customerID);
       if (customerIndex >= 0) {
@@ -108,13 +118,14 @@
       }
     };
 
-
+    //done
     this.availableCars = function () {
       return this.cars.filter(function(car) {
         return car.available == true;
       });
     };
 
+    //done
     this.rentCar = function (customerID, rentalDuration) {
       var availableCars = this.availableCars();
       if (availableCars.length === 0) {
@@ -132,23 +143,23 @@
       }
     };
 
+    //done
     this.returnCar = function (customerID) {
-      if(getCustomer(customerID)!=undefined) {
-        getCustomer(customerID).carRented.return();
-        getCustomer(customerID).carRented = null;
+      if(this.getCustomer(customerID)!=undefined) {
+        this.getCustomer(customerID).carRented.return();
+        this.getCustomer(customerID).carRented = null;
         console.log( "Thank you for using our service");
       } else {
         console.log("Please provide a valid customerID");
       }
     }
 
+    //done
     this.totalRevenue = function () {
       return this.cars.reduce(function(acc,val,ind,arr){
-        return acc += arr[ind].quotePrice();
-      });
+        return acc += arr[ind].quotePrice(arr[ind].rentalDuration);
+      }, 0);
     }
-  };
-
   };
 
 
@@ -169,16 +180,32 @@
   var carA = new Car(carInfo);
 
   var vendor = new Vendor('Jens Limited');
+
+  //test add customer and carID
   vendor.addCustomer(customerA);
   vendor.addCar(carA);
+  
+  //print leftover cars
+  console.log(vendor.availableCars());
 
-  console.log(vendor.availableCars());
+  //test rent cars
   vendor.rentCar(customerA.id, 5);
+
+  //print leftover cars
   console.log(vendor.availableCars());
+
+  //test totalrevenue
   console.log(vendor.totalRevenue());
 
+  //test return car
+  vendor.returnCar("001");
+  
+  //check if car returned
+  console.log(vendor.availableCars());
+
+  //test removecustomer and car
   vendor.removeCustormer("001");
   console.log(vendor.customers);
-
   vendor.removeCar("001");
   console.log(vendor.cars);
+  
